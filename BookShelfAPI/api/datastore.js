@@ -107,7 +107,78 @@ exports.books=[
        date : 1999,
        blurb : "jhgfdcvbhjuytgv"
     }];
-exports.reviews=[];
+exports.reviews=[
+ {
+       id : 0,
+       opinion : "Grand",
+       username : "Jimmy Doe",
+       bookId : "the-notebook",
+       upvote : 22
+    },
+    {
+       opinion : "Grand",
+       bookId : "the-notebook",
+       username : "Ciara",
+       id : 1,
+       upvote : 21
+    },
+    {
+       opinion : "Not Great",
+       bookId : "the-notebook",
+       username : "Adam",
+       id : 2,
+       upvote : 7
+    },
+    {
+       opinion : "Fantastic",
+       bookId : "the-book-thief",
+       username : "joe",
+       id : 3,
+       upvote : 2
+    },
+    {
+       opinion : "Great",
+       bookId : "to-kill-a-mockingbird",
+       username : "Jo",
+       id : 4,
+       upvote : 5
+    },
+    {
+       opinion : "Good",
+       bookId : "the-notebook",
+       username : "Millie",
+       id : 5,
+       upvote : 8
+    },
+    {
+       opinion : "Great Book",
+       bookId : "the-passenger",
+       username : "Johnny",
+       id : 6,
+       upvote : 2
+    },
+    {
+       opinion :  "good book" ,
+       bookId : "the-book-thief",
+       username : "CP",
+       id : 7,
+       upvote : 2
+    },
+    {
+       opinion : "This book is set in a future when animals are much cleverer than now. And because of their cleverness, the pigs started a revolution against the humans. Pigs could speak fluently in English unlike the other animals, and that gave them the power to be leaders. But, the story that follows only happened a few years after that...  Their first leader, Old Major, was kind and fair who knew animals should be equal. But when Napoleon became the leader it was very unpleasant. He made a rule that allowed the pigs to have better food and that forced all of the other animals to work crazily hard every day and night. That wasn’t enough, Napoleon wanted more power.  He decided to kill his brother, Snowball, so that he would be the only leader. Snowball was admired because he came up with a clever idea to build windmill. Snowball was also popular because of his role in the revolution. He and Boxer (a hardworking horse) were the bravest. So this selfish pig, Napoleon, destroyed what the animals built (the windmill) and blamed Snowball who escaped the farm. Then Napoleon made the animals work harder and harder, making the animals very weak and even die. If any of the animals were clever like Napoleon, he would just order an execution to get rid of them.My favourite character is Boxer the horse, who would work the hardest of the animals but never give up no matter how much it hurt, or how old he gets. He never complained to Napoleon, instead saying, “Napoleon is always right”. This book made me think of another newer book, Mockingjay (Part Two of The Hunger Games films) because President Snow is like the humans and President Alma Coin is like Napoleon. President Alma Coin defeats President Snow, but then becomes corrupt and maybe worse.",
+       bookId : "animal-farm",
+       username : "John N",
+       upvote : 11,
+       id : 8
+    },
+    {
+       opinion : "Great Book - Well Worth a read!!",
+       bookId : "animal-farm",
+       username : "Emily M.",
+       upvote : 0,
+       id : 9
+    }
+    ];
 exports.authors=[
  {
        id : "george-orwell",

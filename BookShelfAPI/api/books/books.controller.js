@@ -10,7 +10,7 @@ var _ = require('lodash')
     exports.show = function(req, res) {
         var index = _.findIndex(datastore.books , 
                function(book) {
-                  return book.id == req.params.id;
+                  return book.bookId == req.params.id;
             });      
          if (index != -1) {
             return res.status(200).json(datastore.books[index]);
