@@ -38,8 +38,17 @@ var _ = require('lodash')
            date:req.body.date,
            blurb:req.body.blurb
         };
-        datastore.books.push(book);
-        return res.status(201).json(book);
+        var index = _.findIndex(datastore.books , 
+               function(book) {
+                  return book.id == id;
+            });      
+         if (index != -1) {
+              return res.sendStatus(409,'Id already exists');
+          }
+          else {
+           datastore.books.push(book);
+           return res.status(201).json(book);
+           }
     };
 
     // Delete a book.
