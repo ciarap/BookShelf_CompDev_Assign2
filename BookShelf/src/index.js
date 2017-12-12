@@ -54,8 +54,8 @@ var App = React.createClass({
                 <Route path="/" component={App}>   // default page route 
                 <IndexRoute component={Homepage}/>
                 <Route path ="/AllBooks" component={AllBooks}/>
-                 <Route path="AllBooks/:id/:authorId/BookReviews" component={BookReviews} />
-                <Route path="AllBooks/:id/:authorId" component={BookDetail} />
+                 <Route path="AllBooks/:_id/:authorId/BookReviews" component={BookReviews} />
+                <Route path="AllBooks/:_id/:authorId" component={BookDetail} />
                 <Route path="/AllReviews" component={AllReviews}/>
                  <Route path="/NewBook" component={NewBook}/>
                  <Route path="/PopularBooks" component={PopularBooks}/>

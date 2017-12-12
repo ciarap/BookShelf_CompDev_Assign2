@@ -1,7 +1,7 @@
 // Author : Ciara Power 20072488 
 
 import React from 'react';
-import LocalBookCache from './LocalBookCache';
+import api from './LocalCache';
 import _ from 'lodash';
 import { Link } from 'react-router'; 
 
@@ -49,11 +49,11 @@ class SelectBox extends React.Component {
 class BookListItem extends React.Component {   //each individual book item details listed
 
     handleVote = () => {   
-            this.props.upvoteHandler(this.props.book.id,this.props.book.votes);
+            this.props.upvoteHandler(this.props.book._id,this.props.book.votes);
         };
 
          handleDelete = () => {
-            this.props.deleteHandler(this.props.book.id);
+            this.props.deleteHandler(this.props.book._id);
         };
 
     render() {
@@ -62,12 +62,12 @@ class BookListItem extends React.Component {   //each individual book item detai
             <div>
             <div className="row">
             <div className="col-md-2">
-             <Link className="link" to={'/AllBooks/' + this.props.book.id +'/'+this.props.book.authorId}>  {/* Image is link to book details page*/}
-            <img src={"../"+this.props.book.images[0]} alt= {this.props.book.title} className="thumb"/>
+             <Link className="link" to={'/AllBooks/' + this.props.book._id +'/'+this.props.book.authorId}>  {/* Image is link to book details page*/}
+            <img src={"../"+this.props.book.images[0].url} alt= {this.props.book.title} className="thumb"/>
                  </Link>
                  </div>
                   <div className="col-md-7">
-                   <Link className="link" to={'/AllBooks/' + this.props.book.id +'/'+this.props.book.authorId}>  {/* Title is link to book details page*/}
+                   <Link className="link" to={'/AllBooks/' + this.props.book._id +'/'+this.props.book.authorId}>  {/* Title is link to book details page*/}
                  <h3>{this.props.book.title}</h3>
                  </Link>
                 <h4> Author: {this.props.book.author}</h4>
@@ -95,7 +95,7 @@ class BookListItem extends React.Component {   //each individual book item detai
 class FilteredBookList extends React.Component {     // The full list of filtered book items
       render() {
           var displayedBooks = this.props.books.map(function(book) {   /*  to deal with one book item from the books array at a time */
-            return <BookListItem key={book.id} book={book}  upvoteHandler={this.props.upvoteHandler}  deleteHandler={this.props.deleteHandler} /> ;
+            return <BookListItem key={book._id} book={book}  upvoteHandler={this.props.upvoteHandler}  deleteHandler={this.props.deleteHandler} /> ;
           }.bind(this)) ;
           return (
                   <div className="col-md-10">
@@ -112,13 +112,13 @@ class AllBooks extends React.Component{   // overall component for page
 
    componentWillUpdate() {     // called just before update when component values change
 
-        request.get('http://localhost:3000/books')    // (READ)
+        request.get('http://localhost:3000/api/books')    // (READ)
             .end(function(error, res){
                 if (res) {
                     var newBooks = JSON.parse(res.text);   {/* the updated json file from server*/}
-                    var oldBooks=LocalBookCache.getAll();   {/* the previous list of books that was stored in cache */}
-                    LocalBookCache.populate(newBooks);
-                    newBooks=LocalBookCache.getAll();    {/* updated list*/}
+                    var oldBooks=api.getAllBooks();   {/* the previous list of books that was stored in cache */}
+                    api.initializeBooks(newBooks);
+                    newBooks=api.getAllBooks();    {/* updated list*/}
 
                if(newBooks.length!== oldBooks.length){    {/* if list length was changed */}
                 this.setState({});
@@ -140,11 +140,11 @@ class AllBooks extends React.Component{   // overall component for page
 
 componentDidMount() {      // when component is mounted at first 
 
-        request.get('http://localhost:3000/books')   // Get books list from server  (READ)
+        request.get('http://localhost:3000/api/books')   // Get books list from server  (READ)
             .end(function(error, res){
                 if (res) {
                     var books = JSON.parse(res.text);
-                    LocalBookCache.populate(books);
+                    api.initializeBooks(books);
                     this.setState({}) ; 
                 } else {
                     console.log(error );
@@ -162,34 +162,44 @@ componentDidMount() {      // when component is mounted at first
         }
     };
 
-     incrementUpvote = (bookId,votes) => {    // increments the votes in the book object on server when user upvotes a book in list
-             
-             request.patch('http://localhost:3000/books/'+bookId,{"votes": votes+1})    // patches the votes attribute in book object (UPDATE)
-            .end(function(error, res){
-                if (res) {
-                  console.log(res);
-                  this.setState({}) ; 
-                } else {
-                    console.log(error );
-                }
-            }.bind(this)); 
-          };
+    incrementUpvote = (_id, votes) => {
+       request
+           .put('http://localhost:3000/api/books/' + _id + '/votes' )
+           .send({ votes: votes + 1 })
+           .set('Content-Type', 'application/json')           
+           .end( (err, res) => {
+             if (err || !res.ok) {
+               alert('Error upvoting book');
+             } else {
+                request.get('http://localhost:3000/api/books/' + _id )
+                  .end( (error, res) => {
+                    if (res) {
+                      var book = JSON.parse(res.text);
+                      api.setOrUpdateBook(book);
+                      this.setState( {}) ;                
+                    } else {
+                      console.log(error );
+                    }
+                  }); 
+             } // end else
+           }); 
+           };
 
-           deleteBook = (bookId) => {    // handles deleting book when delete button pressed
 
-             request.delete('http://localhost:3000/books/'+bookId)   // deletes book with specified id from json server 
-            .end(function(error, res){
-                if (res) {
-                  console.log(res);
-                  this.setState({}) ; 
-                } else {
-                    console.log(error );
-                }
-            }.bind(this)); 
-          };
-
+        deleteBook = (k) => {
+        request
+          .del('http://localhost:3000/api/books/' + k)
+          .end( (err, res) => {
+              if (err || !res.ok) {
+                 alert('Error deleting book');
+               } else {
+                  api.deleteBook(k);
+                  this.setState( {} ) ;
+               } 
+          });
+    };
           render(){
-                let list = LocalBookCache.getAll().filter( (p) => {      {/* searches through list in accordance with search state value*/}
+                let list = api.getAllBooks().filter( (p) => {      {/* searches through list in accordance with search state value*/}
                     return p.title.toLowerCase().search(
                         this.state.search.toLowerCase() ) !== -1 ;
                 } );

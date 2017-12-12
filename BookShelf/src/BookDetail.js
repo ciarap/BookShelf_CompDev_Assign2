@@ -10,13 +10,13 @@
    class BookSection extends React.Component {  // section of page containing book details
     
     handleVote = () => {  // book upvoted
-            this.props.upvoteHandler(this.props.book.id,this.props.book.votes);
+            this.props.upvoteHandler(this.props.book._id,this.props.book.votes);
         };
 
       render(){
           var mainImage = (
             <div className="book-images">
-              <img src={"/"+this.props.book.images[0]}   // first image in nested images collection is main image 
+              <img src={"/"+this.props.book.images[0].url}   // first image in nested images collection is main image 
                     alt={this.props.book.title}  className="book"/>
             </div>
             ) ;
@@ -51,7 +51,7 @@ class ImagesSection extends React.Component{   // images section of page
                console.log(img);
                return (
                 <li key={index}>
-                   <img key={index} src={"/"+img}
+                   <img key={index} src={"/"+img.url}
                        alt="missing" />
 
                 </li>
@@ -102,7 +102,7 @@ class ImagesSection extends React.Component{   // images section of page
 
        componentDidMount() {   // when component mounts
 
-        request.get('http://localhost:3000/books/'+this.props.params.id)   // gets book object from server (READ)
+        request.get('http://localhost:3000/api/books/'+this.props.params._id)   // gets book object from server (READ)
             .end(function(error, res){
                 if (res) {
                     var book = JSON.parse(res.text);
@@ -113,7 +113,7 @@ class ImagesSection extends React.Component{   // images section of page
                 }
             }.bind(this)); 
 
-        request.get('http://localhost:3000/authors/'+this.props.params.authorId) //gets author relevant to book from server (READ)
+        request.get('http://localhost:3000/api/authors/'+this.props.params.authorId) //gets author relevant to book from server (READ)
             .end(function(error, res){
                 if (res) {
                   if(error){
@@ -137,7 +137,7 @@ class ImagesSection extends React.Component{   // images section of page
 
       componentWillUpdate() {  // before update
 
-        request.get('http://localhost:3000/books/'+this.props.params.id)  //get the book from server (READ)
+        request.get('http://localhost:3000/api/books/'+this.props.params._id)  //get the book from server (READ)
             .end(function(error, res){
                 if (res) {
                     var newBook = JSON.parse(res.text);   // new book from server
@@ -156,8 +156,8 @@ class ImagesSection extends React.Component{   // images section of page
       };
 
 
-       incrementUpvote = (bookId,votes) => {   // when upvote occurs
-             request.patch('http://localhost:3000/books/'+bookId,{"votes": votes+1})  // patches the new votes value to the books attribute
+       incrementUpvote = (_id,votes) => {   // when upvote occurs
+             request.put('http://localhost:3000/api/books/'+_id+'/votes',{"votes": votes+1})  // patches the new votes value to the books attribute
             .end(function(error, res){
                 if (res) {
                   console.log(res);
@@ -170,7 +170,8 @@ class ImagesSection extends React.Component{   // images section of page
 
       render(){
 
-          let bookDisplay = <p>No book details + {this.props.params.id}</p> ; 
+          let bookDisplay = <p>No book details + {this.props.params._id}</p> ; 
+          console.log(this.props.params._id)
           let book= BookCache.getBook();
 
           let authorDisplay = <p>No author details + {this.props.params.authorId}</p> ; 
@@ -195,7 +196,7 @@ class ImagesSection extends React.Component{   // images section of page
                        <h1 className="BlackPageTitle">{book.title}</h1>      
                     </div>
                     <div className="col-md-1">
-                     <Link className="link" to={'/AllBooks/'+book.id+'/'+book.authorId+'/BookReviews'}>
+                     <Link className="link" to={'/AllBooks/'+book._id+'/'+book.authorId+'/BookReviews'}>
                        <img className="img-responsive back-arrow" src="/img/forward_arrow.png" alt="arrow" />
                         <figcaption>  Reviews  </figcaption>
                         </Link> 

@@ -1,50 +1,50 @@
 var _ = require('lodash')
-    var datastore = require('../datastore');
+    //var datastore = require('../datastore');
+       var review = require('./review.model');
 
-    // Get all reviews
+ // Get all reviews
     exports.index = function(req, res) {
-        return res.status(200).json(datastore.reviews);
+       review.find(function (err, reviews) {
+        if(err) { return handleError(res, err); }
+        console.log('index ok' + reviews[0]);
+        return res.status(200).json(reviews);
+      });
     } ;
 
-    // Get a single review
-   exports.show = function(req, res) {
-         if (datastore.reviews[req.params.id]) {
-            return res.status(200).json(datastore.reviews[req.params.id]);
-          } else {
-            return res.sendStatus(404);
-          }
-
-    };
-
-    // create a review
-   exports.create = function(req, res) {
-        var nextId = 0;
-        var last = _.last(datastore.reviews);
-        if (last != undefined) {
-           nextId = last.id + 1;
-        } else {
-          nextId = 1;
-        }
-        var review = {
-           id: nextId,
-           upvote:0,
-           opinion: req.body.opinion ,
-           bookId: req.body.bookId,
-           username:req.body.username
-        };
-        datastore.reviews.push(review);
+ // Creates a new review.
+    exports.create = function(req, res) {
+         
+        review.create(req.body, function(err, review) {
+        if(err) { return handleError(res, err); }
         return res.status(201).json(review);
+      });
     };
+ exports.show = function(req, res) {
+      review.findById(req.params._id, function (err, review) {
+          if(err) { return handleError(res, err); }
+          return res.status(200).json(review);
+      });
+  } ;
 
-    // Delete a review.
-    exports.destroy = function(req, res) {
-        var elements = _.remove(datastore.reviews , 
-               function(review) {
-                  return review.id == req.params.id;
-            });  
-         if (elements.length == 1) {
-            return res.sendStatus(200);
-          } else {
-             return res.sendStatus(404);
-          }
-    };
+
+    // Update the upvote for a reviews
+  exports.update_upvote = function(req, res) {
+     review.findById(req.params._id, function (err, review) {
+          if(err) { res.sendStatus(404); }
+          review.upvote = req.body.upvote
+          review.save(function (err) {
+              if(err) { return handleError(res, err); }
+              return res.sendStatus(200);
+          });
+      });
+  };
+
+exports.destroy = function(req, res) {
+    review.findById(req.params._id, function (err, review) {
+        if(err) { return handleError(res, err); }        
+        review.remove(function (err) {
+            if(err) { return handleError(res, err); }
+            return res.sendStatus(200,'Deleted');
+        });
+    })
+};

@@ -3,6 +3,8 @@
 import React from 'react';
 import BookCache from './BookCache';
 import request from 'superagent' ;
+import api from './LocalCache';
+
  import { Link } from 'react-router';
   import _ from 'lodash';
  
@@ -56,11 +58,11 @@ class Form extends React.Component {   // form component to add a review
 class ReviewListItem extends React.Component {   // each review in list
 
    handleVote = () => {  //review upvote
-            this.props.upvoteHandler(this.props.review.id,this.props.review.upvote);
+            this.props.upvoteHandler(this.props.review._id,this.props.review.upvote);
         };
 
     handleDelete = () => {   // delete review
-            this.props.deleteHandler(this.props.review.id);
+            this.props.deleteHandler(this.props.review._id);
         };
 
     render() {
@@ -118,22 +120,21 @@ class ReviewList extends React.Component {
   class BookReviews extends React.Component {   
 
        componentWillUpdate() {   // before update
-
-        request.get('http://localhost:3000/books/'+this.props.params.id+'?_embed=reviews')   // (READ) gets book from server and gets reviews from server that have the relevant bookId attribute value to the book in question
-                                                                                            // this for all purposes returns the book object with a nested collection within of the reviews matching the book
+        request.get('http://localhost:3000/api/reviews/?$filter=bookId eq '+this.props.params._id)    // (READ) gets book from server and gets reviews from server that have the relevant bookId attribute value to the book in question
+                                                                                                     // this for all purposes returns the book object with a nested collection within of the reviews matching the book
             .end(function(error, res){
                 if (res) {
-                    var newBook = JSON.parse(res.text);
-                    var oldBook=BookCache.getBook();
-                    BookCache.setBook(newBook);
-                    newBook=BookCache.getBook();
+                    var newReviews = JSON.parse(res.text);   {/* the updated json file from server*/}
+                    var oldReviews=api.getAllReviews();   {/* the previous list of Reviews that was stored in cache */}
+                    api.initializeReviews(newReviews);
+                    newReviews=api.getAllReviews();    {/* updated list*/}
 
-                    if(newBook.reviews.length !== oldBook.reviews.length ){   // if the amount of reviews for books differ, change occurred so update necessary
-                    this.setState({}) ; 
-                    }
+               if(newReviews.length!== oldReviews.length){    {/* if list length was changed */}
+                this.setState({});
+                }
                 else{
-                for(var i=0;i<newBook.reviews.length;i++){   // if the upvotes of review in one book doesnt match the corresponding review upvotes in other book, update needed
-                    if(newBook.reviews[i].upvote !== oldBook.reviews[i].upvote){
+                for(var i=0;i<newReviews.length;i++){   // if the upvotes of review in one book doesnt match the corresponding review upvotes in other book, update needed
+                    if(newReviews[i].upvote !== oldReviews[i].upvote){
                       this.setState({});
                     }
                 }
@@ -148,13 +149,25 @@ class ReviewList extends React.Component {
 
 
       componentDidMount() {  // initial component mpunted
-        request.get('http://localhost:3000/books/'+this.props.params.id+'?_embed=reviews')  // (READ) gets book from server and gets reviews from server that have the relevant bookId attribute value to the book in question
-                                                                                            // this for all purposes returns the book object with a nested collection within of the reviews matching the book
 
+           request.get('http://localhost:3000/api/books/'+this.props.params._id)   // gets book object from server (READ)
             .end(function(error, res){
                 if (res) {
                     var book = JSON.parse(res.text);
                     BookCache.setBook(book);
+                    this.setState({}) ; 
+                } else {
+                    console.log(error );
+                }
+            }.bind(this)); 
+
+        request.get('http://localhost:3000/api/reviews/?$filter=bookId eq '+this.props.params._id)  // (READ) gets book from server and gets reviews from server that have the relevant bookId attribute value to the book in question
+                                                                                            // this for all purposes returns the book object with a nested collection within of the reviews matching the book
+
+           .end(function(error, res){
+                if (res) {
+                    var reviews = JSON.parse(res.text);
+                    api.initializeReviews(reviews);
                     this.setState({}) ; 
                 } else {
                     console.log(error );
@@ -166,7 +179,7 @@ class ReviewList extends React.Component {
 
 
  incrementUpvote = (reviewId,upvote) => { // when review is voted for
-             request.patch('http://localhost:3000/reviews/'+reviewId,{"upvote": upvote+1}) // updates the upvote attribute in the relevant review (UPDATE)
+             request.patch('http://localhost:3000/api/reviews/'+reviewId,{"upvote": upvote+1}) // updates the upvote attribute in the relevant review (UPDATE)
             .end(function(error, res){
                 if (res) {
                   console.log(res);
@@ -179,7 +192,7 @@ class ReviewList extends React.Component {
 
 
           deleteReview = (reviewId) => {  // to delete a review
-             request.delete('http://localhost:3000/reviews/'+reviewId)  // deletes review from server (DELETE)
+             request.delete('http://localhost:3000/api/reviews/'+reviewId)  // deletes review from server (DELETE)
             .end(function(error, res){
                 if (res) {
                   console.log(res);
@@ -192,7 +205,7 @@ class ReviewList extends React.Component {
 
 
           addReview = (opinion,username) => {   // to add a review 
-            request.post('http://localhost:3000/reviews/',{"opinion":opinion, "bookId":this.props.params.id,"username":username, "upvote":0})  // adds review to server , passing all atttribute values  (CREATE)
+            request.post('http://localhost:3000/api/reviews/',{"opinion":opinion, "bookId":this.props.params._id,"username":username, "upvote":0})  // adds review to server , passing all atttribute values  (CREATE)
             .end(function(error, res){
                 if (res) {
                   console.log(res);
@@ -207,24 +220,20 @@ class ReviewList extends React.Component {
                
           let formDisplay=<p> No Form</p>;
 
-          let reviewDisplay = <p>No book + {this.props.params.id}</p> ; 
-          let book= BookCache.getBook();
+          let reviewDisplay = <p>No book + {this.props.params._id}</p> ; 
+         let reviews=api.getAllReviews();
+         let book= BookCache.getBook();
 
-          let reviews=false;
-          if(book){   // if book exists then sort its reviews 
-            reviews=  _.sortBy(book.reviews, function(review) {
+          if(reviews){   // if book exists then sort its reviews 
+            reviews=  _.sortBy(reviews, function(review) {
                 return - review.upvote;
                 }
             ); 
-          }
-
-
-        if (reviews) {   // if book had reviews
               reviewDisplay =  (
                 <div >
                  <div className="row header" >
                       <div className="col-md-1">
-                       <Link className="link" to={'/AllBooks/'+this.props.params.id+'/'+this.props.params.authorId}> 
+                       <Link className="link" to={'/AllBooks/'+this.props.params._id+'/'+this.props.params.authorId}> 
                        <img className="img-responsive back-arrow" src="/img/back_arrow.png" alt="arrow" />
                         <figcaption>  Go Back  </figcaption>
                         </Link> 

@@ -1,12 +1,16 @@
 var express = require('express');
+var cors = require('cors')
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var queryHandler = require('express-api-queryhandler');
 
 
 var app = express();
+ var mongoose = require('mongoose');    // NEW   
+  mongoose.connect('mongodb://localhost/bookShelfDb'); // NEW
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,6 +23,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
+app.use(queryHandler.fields());
+app.use(queryHandler.filter());
+app.use(queryHandler.pagination({limit: 25}));
+app.use(queryHandler.sort());
+ 
+app.get('/items', function (req, res, next) {
+  Item.find(req.where, req.fields, req.options, function (err, items) {
+    if (err) return next(err);
+    res.json(items);
+  });
+});
 
  require('./routes')(app);
 

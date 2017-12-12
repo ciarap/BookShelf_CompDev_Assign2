@@ -64,6 +64,7 @@ class Form extends React.Component {
             let date = this.state.date.trim();
             let blurb = this.state.blurb.trim();
 
+
             if (!title || !author || !authorImageUrl || !authorWikiUrl || !authorInfo || !imageUrl1 || !date || !blurb) {  // required inputs before submission occurs
                 return;
             }
@@ -190,7 +191,7 @@ class Form extends React.Component {
               images.push(imageUrl4);
             }
 
-            request.post('http://localhost:3000/books/',{"votes":0,"id":id, "authorId":authorId,"title":title, "author":author,"images":images, "category":category,"date":date,"blurb":blurb})  // add new book to server with all attributes (CREATE)
+            request.post('http://localhost:3000/api/books/',{"votes":0,"id":id, "authorId":authorId,"title":title, "author":author,"images":images, "category":category,"date":date,"blurb":blurb})  // add new book to server with all attributes (CREATE)
             .end(function(error, res){
                 if (res) {
                   console.log(res);
@@ -206,12 +207,12 @@ class Form extends React.Component {
             authorId=authorId.toLowerCase();   // author id to lower case
 
 
-        request.get('http://localhost:3000/authors/'+authorId)  // get author object from server (READ)
+        request.get('http://localhost:3000/api/authors/'+authorId)  // get author object from server (READ)
             .end(function(error, res){
                 if (res) {
                   if(error){
                     if (error.status === 404){  // if the author doesnt exist then create the author 
-                     request.post('http://localhost:3000/authors/',{"name":author, "id":authorId,"url":authorWikiUrl, "imageUrl":authorImageUrl,"info":authorInfo})  //add author to server (CREATE)
+                     request.post('http://localhost:3000/api/authors/',{"name":author, "id":authorId,"url":authorWikiUrl, "imageUrl":authorImageUrl,"info":authorInfo})  //add author to server (CREATE)
                       .end(function(error, res){
                       if (res) {
                          console.log(res);

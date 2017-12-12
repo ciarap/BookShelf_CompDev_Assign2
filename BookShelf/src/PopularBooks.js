@@ -1,7 +1,7 @@
 // Author: Ciara Power 20072488
 
 import React from 'react';
-import LocalBookCache from './LocalBookCache';
+import api from './LocalCache';
 import _ from 'lodash';
  import { Link } from 'react-router'; 
   import BookCache from './BookCache';
@@ -13,7 +13,7 @@ class PopularBookListItem extends React.Component {
 
   componentDidMount() {  // mounted at first
 
-  request.get('http://localhost:3000/books/'+this.props.book.id)  // get book from server (READ)
+  request.get('http://localhost:3000/api/books/'+this.props.book._id)  // get book from server (READ)
             .end(function(error, res){
                 if (res) {
                     var book = JSON.parse(res.text);
@@ -28,7 +28,7 @@ class PopularBookListItem extends React.Component {
     render() {
       let bookDisplay = (
          <li  style={{border: '1px solid black'}}>
-            <p>No book details + {this.props.book.bookId}</p>
+            <p>No book details + {this.props.book._id}</p>
             </li> )
 
       let book= BookCache.getBook();
@@ -39,8 +39,8 @@ if(book){
     <li style={{border: '1px solid black'}} >
     <div className="row">
    <div className="col-md-2" style={{margin:'auto',minHeight: '180px'}}>
-             <Link className="link" to={'/AllBooks/' + book.id +'/'+book.authorId}>
-            <img src={"../"+book.images[0]} alt= {book.title} className="thumb"/>
+             <Link className="link" to={'/AllBooks/' + book._id +'/'+book.authorId}>
+            <img src={"../"+book.images[0].url} alt= {book.title} className="thumb"/>
                  </Link>
                  </div>
                   <div className="col-md-10">
@@ -48,7 +48,7 @@ if(book){
                    <span  style={{fontWeight:'bold'}}>Votes: </span> 
                       <span className="glyphicon glyphicon-heart "  style={{ color: 'red',fontSize:'25px' }} > {this.props.book.votes}</span>
                        </h4>
-                 <h4><span  style={{fontWeight:'bold'}}>Book:</span>  <Link className="link" to={'/AllBooks/' + book.id +'/'+book.authorId}>{book.title}</Link></h4>
+                 <h4><span  style={{fontWeight:'bold'}}>Book:</span>  <Link className="link" to={'/AllBooks/' + book._id +'/'+book.authorId}>{book.title}</Link></h4>
                 <h4><span  style={{fontWeight:'bold'}}> Author: </span>{this.props.book.author}</h4>
                 <h4> <span style={{fontWeight:'bold'}}>Category: </span>{this.props.book.category}</h4>
                 <h4> <span  style={{fontWeight:'bold'}}>Date: </span>{this.props.book.date}</h4>
@@ -69,7 +69,7 @@ if(book){
 class FilteredPopularBooksList extends React.Component {   // list of popular books 
       render() {
           var displayedPopularBooks = this.props.books.map(function(book) {  // deal with one book at a time
-            return <PopularBookListItem key={book.id} book={book} /> ;
+            return <PopularBookListItem key={book._id} book={book} /> ;
           }) ;
           return (
                   <div >
@@ -84,11 +84,11 @@ class FilteredPopularBooksList extends React.Component {   // list of popular bo
 
 class PopularBooks extends React.Component{
 componentDidMount() {
-        request.get('http://localhost:3000/books')  // get all books (READ)
+        request.get('http://localhost:3000/api/books')  // get all books (READ)
             .end(function(error, res){
                 if (res) {
                     var books = JSON.parse(res.text);
-                    LocalBookCache.populate(books);
+                    api.initializeBooks(books);
                     this.setState({}) ; 
                 } else {
                     console.log(error );
@@ -96,7 +96,7 @@ componentDidMount() {
             }.bind(this)); 
     }
           render(){
-                let list = LocalBookCache.getAll();
+                let list = api.getAllBooks();
                 let filteredPopularBooksList = _.sortBy(list, 'votes') ;  {/* sort the list by votes */}
                 filteredPopularBooksList=filteredPopularBooksList.reverse(); {/* reverse to get highest votes at top */}
                 filteredPopularBooksList=filteredPopularBooksList.slice(0,5);  {/* only want top 5 */}

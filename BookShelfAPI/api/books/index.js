@@ -4,8 +4,9 @@
     var router = express.Router();
 
     router.get('/', controller.index);
-    router.get('/:id', controller.show);
+    router.get('/:_id', controller.show);
     router.post('/', controller.create);
-    router.delete('/:id', controller.destroy);
+    router.delete('/:_id', controller.destroy);
+    router.put('/:_id/votes', controller.update_votes);
 
     module.exports = router;

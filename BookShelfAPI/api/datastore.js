@@ -177,8 +177,7 @@ exports.reviews=[
        username : "Emily M.",
        upvote : 0,
        id : 9
-    }
-    ];
+    }];
 exports.authors=[
  {
        id : "george-orwell",
