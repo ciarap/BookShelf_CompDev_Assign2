@@ -120,7 +120,7 @@ class ReviewList extends React.Component {
   class BookReviews extends React.Component {   
 
        componentWillUpdate() {   // before update
-        request.get('http://localhost:3000/api/reviews/?$filter=bookId eq '+this.props.params._id)    // (READ) gets book from server and gets reviews from server that have the relevant bookId attribute value to the book in question
+        request.get('http://localhost:3000/api/reviews/book/'+this.props.params._id)    // (READ) gets book from server and gets reviews from server that have the relevant bookId attribute value to the book in question
                                                                                                      // this for all purposes returns the book object with a nested collection within of the reviews matching the book
             .end(function(error, res){
                 if (res) {
@@ -161,7 +161,7 @@ class ReviewList extends React.Component {
                 }
             }.bind(this)); 
 
-        request.get('http://localhost:3000/api/reviews/?$filter=bookId eq '+this.props.params._id)  // (READ) gets book from server and gets reviews from server that have the relevant bookId attribute value to the book in question
+        request.get('http://localhost:3000/api/reviews/book/'+this.props.params._id)  // (READ) gets book from server and gets reviews from server that have the relevant bookId attribute value to the book in question
                                                                                             // this for all purposes returns the book object with a nested collection within of the reviews matching the book
 
            .end(function(error, res){
@@ -178,17 +178,28 @@ class ReviewList extends React.Component {
       };
 
 
- incrementUpvote = (reviewId,upvote) => { // when review is voted for
-             request.patch('http://localhost:3000/api/reviews/'+reviewId,{"upvote": upvote+1}) // updates the upvote attribute in the relevant review (UPDATE)
-            .end(function(error, res){
-                if (res) {
-                  console.log(res);
-                  this.setState({}) ; 
-                } else {
-                    console.log(error );
-                }
-            }.bind(this)); 
-          };
+ incrementUpvote = (_id, upvote) => {
+       request
+           .put('http://localhost:3000/api/reviews/' + _id + '/upvote' )
+           .send({ upvote: upvote + 1 })
+           .set('Content-Type', 'application/json')           
+           .end( (err, res) => {
+             if (err || !res.ok) {
+               alert('Error upvoting review');
+             } else {
+                request.get('http://localhost:3000/api/reviews/' + _id )
+                  .end( (error, res) => {
+                    if (res) {
+                      var review = JSON.parse(res.text);
+                      api.setOrUpdateReview(review);
+                      this.setState( {}) ;                
+                    } else {
+                      console.log(error );
+                    }
+                  }); 
+             } // end else
+           }); 
+           };
 
 
           deleteReview = (reviewId) => {  // to delete a review
