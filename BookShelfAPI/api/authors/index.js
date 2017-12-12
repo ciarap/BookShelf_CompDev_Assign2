@@ -3,8 +3,8 @@
 
     var router = express.Router();
 
-    router.get('/', controller.index);
-    router.get('/:id', controller.show);
+    router.get('/:_id', controller.show);
     router.post('/', controller.create);
+     router.get('/', controller.index);
 
     module.exports = router; 

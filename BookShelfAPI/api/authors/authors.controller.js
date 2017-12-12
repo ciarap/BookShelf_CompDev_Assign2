@@ -1,47 +1,28 @@
 var _ = require('lodash')
-var datastore = require('../datastore');
+//var datastore = require('../datastore');
+    var author = require('./author.model');
 
-    // Get all authors
+   exports.show = function(req, res) {
+      author.findById(req.params._id, function (err, author) {
+          if(err) { return handleError(res, err); }
+          return res.status(200).json(author);
+      });
+  } ;
+
+ // Get all authors
     exports.index = function(req, res) {
-        return res.status(200).json(datastore.authors);
+       author.find(function (err, authors) {
+        if(err) { return handleError(res, err); }
+        console.log('index ok' + authors[0]);
+        return res.status(200).json(authors);
+      });
     } ;
 
-    // Get a single author
-   exports.show = function(req, res) {
-        var index = _.findIndex(datastore.authors , 
-               function(author) {
-                  return author.id == req.params.id;
-            });      
-         if (index != -1) {
-            return res.status(200).json(datastore.authors[index]);
-          }
-          else {
-             return res.sendStatus(404);
-           }
-
-    };
 
     // Creates a new author.
     exports.create = function(req, res) {
-       let authorId=  req.body.name.replace(/\s+/g, '-');   // replace spaces in title name with - for id value
-       authorId=authorId.toLowerCase();  // set to lower case id
-        var author = {
-           name :req.body.name,  
-           id :authorId, 
-           url :req.body.url, 
-           imageUrl :req.body.imageUrl, 
-           info :req.body.info
-        };
-
-        var index = _.findIndex(datastore.authors , 
-               function(author) {
-                  return author.id ==authorId;
-            });      
-         if (index != -1) {
-              return res.sendStatus(409,'Id already exists');
-          }
-          else {
-           datastore.authors.push(author);
-           return res.status(201).json(author);
-           }
+        author.create(req.body, function(err, author) {
+        if(err) { return handleError(res, err); }
+        return res.status(201).json(author);
+      });
     };

@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
   mongoose.connect('mongodb://localhost/bookShelfDb');
   var Book = require('../api/books/book.model');
    var Review = require('../api/reviews/review.model');
+    var Author = require('../api/authors/author.model');
 
  Review.find({}).remove(function() {
     Review.create( {
@@ -79,12 +80,79 @@ var mongoose = require('mongoose');
 
  });
 
+Author.find({}).remove(function() {
+    Author.create( 
+
+{
+       _id : "5a2ff6e4f514972010a26206",
+       name : "George Orwell ",
+       imageUrl : "./img/george-orwell.jpg",
+       info : "Eric Arthur Blair (25 June 1903 – 21 January 1950),better known by his pen name George Orwell, was an English novelist, essayist, journalist, and critic. His work is marked by lucid prose, awareness of social injustice, opposition to totalitarianism, and outspoken support of democratic socialism.Orwell wrote literary criticism, poetry, fiction, and polemical journalism. He is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949). His non-fiction works, including The Road to Wigan Pier (1937), documenting his experience of working class life in the north of England, and Homage to Catalonia (1938), an account of his experiences in the Spanish Civil War, are widely acclaimed, as are his essays on politics, literature, language, and culture. In 2008, The Times ranked him second on a list of \"The 50 greatest British writers since 1945\".Orwell's work continues to influence popular and political culture, and the term Orwellian – descriptive of totalitarian or authoritarian social practices – has entered the language together with many of his neologisms, including Big Brother, Thought Police, Room 101, memory hole, newspeak, doublethink, proles, unperson, and thoughtcrime.",
+       url : "https://en.wikipedia.org/wiki/George_Orwell"
+    },
+    {
+       _id : "5a2ff6e4f514972010a26207",
+       imageUrl : "./img/harper-lee.jpg",
+       name : "Harper Lee",
+       url :  "https://en.wikipedia.org/wiki/Harper_Lee ",
+       info : "Nelle Harper Lee (April 28, 1926 – February 19, 2016), better known by her pen name Harper Lee, was an American novelist widely known for To Kill a Mockingbird, published in 1960. Immediately successful, it won the 1961 Pulitzer Prize and has become a classic of modern American literature. Though Lee had only published this single book, in 2007 she was awarded the Presidential Medal of Freedom for her contribution to literature. Additionally, Lee received numerous honorary degrees, though she declined to speak on those occasions. She was also known for assisting her close friend Truman Capote in his research for the book In Cold Blood (1966). Capote was the basis for the character Dill in To Kill a Mockingbird.The plot and characters of To Kill a Mockingbird are loosely based on Lee's observations of her family and neighbors, as well as an event that occurred near her hometown in 1936, when she was 10 years old. The novel deals with the irrationality of adult attitudes towards race and class in the Deep South of the 1930s, as depicted through the eyes of two children. The novel was inspired by racist attitudes in her hometown of Monroeville, Alabama.Another novel, Go Set a Watchman, was written in the mid-1950s and published in July 2015 as a \"sequel\", though it was later confirmed to be To Kill a Mockingbird's first draft."
+    },
+    {
+       _id : "5a2ff6e4f514972010a26208",
+       name : "J.K Rowling",
+       imageUrl : "./img/jk-rowling.jpg",
+       url : "https://en.wikipedia.org/wiki/J._K._Rowling",
+       info : "Joanne Rowling, ( born 31 July 1965), who writes under the pen names J. K. Rowling and Robert Galbraith, is a British novelist and screenwriter who wrote the Harry Potter fantasy series. The books have won multiple awards, and sold more than 400 million copies. They have become the best-selling book series in history and been the basis for a series of films, over which Rowling had overall approval on the scripts and was a producer on the final films in the series.Born in Yate, Gloucestershire, England, Rowling was working as a researcher and bilingual secretary for Amnesty International when she conceived the idea for the Harry Potter series while on a delayed train from Manchester to London in 1990. The seven-year period that followed saw the death of her mother, birth of her first child, divorce from her first husband and relative poverty until the first novel in the series, Harry Potter and the Philosopher's Stone, was published in 1997. There were six sequels, of which the last, Harry Potter and the Deathly Hallows, was released in 2007. Since then, Rowling has written four books for adult readers: The Casual Vacancy (2012) and—under the pseudonym Robert Galbraith—the crime fiction novels The Cuckoo's Calling (2013), The Silkworm (2014) and Career of Evil (2015).Rowling has lived a \"rags to riches\" life story, in which she progressed from living on state benefits to multi-millionaire status within five years. She is the United Kingdom's best-selling living author, with sales in excess of £238M. The 2016 Sunday Times Rich List estimated Rowling's fortune at £600 million, ranking her as the joint 197th richest person in the UK. Time magazine named her as a runner-up for its 2007 Person of the Year, noting the social, moral, and political inspiration she has given her fans. In October 2010, Rowling was named the \"Most Influential Woman in Britain\" by leading magazine editors. She has supported charities including Comic Relief, One Parent Families, Multiple Sclerosis Society of Great Britain and Lumos."
+    },
+    {
+       _id : "5a2ff6e4f514972010a26209",
+       imageUrl : "./img/lisa-lutz.jpg",
+       name : "Lisa Lutz",
+       url : "https://en.wikipedia.org/wiki/Lisa_Lutz",
+       info : "Lisa Lutz is an American author. She began her career writing screenplays for Hollywood. One of her rejected screenplays became the basis for a popular series of novels about a family of private investigators, the Spellmans."
+    },
+    {
+       _id : "5a2ff6e4f514972010a2620a",
+       name : "Markus Zusak",
+       url : "https://en.wikipedia.org/wiki/Markus_Zusak",
+       imageUrl : "./img/markus-zusak.jpg",
+       info : "Markus Frank Zusak (born 23 June 1975) is an Australian writer. He is best known for The Book Thief and The Messenger (US title, I Am the Messenger), two novels for young adults which have been international best-sellers. He won the annual Margaret A. Edwards Award in 2014 for his contributions to young-adult literature published in the US."
+    },
+    {
+       _id : "5a2ff6e4f514972010a2620b",
+       imageUrl :  "./img/nicholas-sparks.jpg" ,
+       name : "Nicholas Sparks",
+       url : "https://en.wikipedia.org/wiki/Nicholas_Sparks",
+       info : "Nicholas Charles Sparks (born December 31, 1965) is an American romance novelist, screenwriter and producer. He has published eighteen novels and two non-fiction books. Several of his novels have become international bestsellers, and eleven of his romantic-drama novels have been adapted to film all with multimillion-dollar box office grosses.Sparks was born in Omaha, Nebraska and wrote his first novel, The Passing, in 1985, while a student at the University of Notre Dame. His first published work came in 1990, when he co-wrote with Billy Mills Wokini: A Lakota Journey to Happiness and Self-Understanding, which sold approximated 50,000 copies in its first year. In 1993, Sparks wrote his breakthrough novel The Notebook in his spare time while selling pharmaceuticals in Washington, D.C.. Two years later, his novel was discovered by literary agent Theresa Park who offered to represent him. The novel was published in October 1996 and made the New York Times best-seller list in its first week of release."
+    },
+    {
+       name : "Jimmy D",
+       _id : "5a2ff6e4f514972010a2620c",
+       url : "https://en.wikipedia.org/wiki/John_Doe",
+       imageUrl : "./img/markus-zusak.jpg",
+       info : "uygvbniuyg"
+    },
+    {
+       name : "New Author",
+       _id : "5a2ff6e4f514972010a2620d",
+       url : "https://en.wikipedia.org/wiki/George_Orwell",
+       imageUrl : "./img/george-orwell.jpg",
+       info : "Great Author"
+    }, function () {
+        process.exit()
+    });
+
+ });
+
+
+
+
   Book.find({}).remove(function() {
     Book.create(  {
       _id:"5a2fc6806528c71be815f919",
       title: "Harry Potter and the Chamber of Secrets",
       author: "J.K Rowling",
-      authorId: "jk-rowling",
+      authorId: "5a2ff6e4f514972010a26208",
       category: "Fantasy",
       date: 1998,
       votes: 28,
@@ -100,7 +168,7 @@ var mongoose = require('mongoose');
       _id: "5a2fc6806528c71be815f91e",
       title: "Animal Farm",
       author: "George Orwell",
-      authorId: "george-orwell",
+      authorId: "5a2ff6e4f514972010a26206",
       category: "Allegorical",
       date: 1945,
       images: [
@@ -116,7 +184,7 @@ var mongoose = require('mongoose');
       _id:"5a2fc6806528c71be815f923",
       title: "The Notebook",
       author: "Nicholas Sparks",
-      authorId: "nicholas-sparks",
+      authorId: "5a2ff6e4f514972010a2620b",
       category: "Romance",
       votes: 5,
       images: [
@@ -132,7 +200,7 @@ var mongoose = require('mongoose');
       _id:"5a2fc6806528c71be815f928",
        title : "The Passenger",
        author : "Lisa Lutz",
-       authorId : "lisa-lutz",
+       authorId : "5a2ff6e4f514972010a26209",
        category : "Thriller",
        votes : 4,
        images : [
@@ -147,7 +215,7 @@ var mongoose = require('mongoose');
       _id: "5a2fc6806528c71be815f92c",
        title : "To Kill a Mockingbird",
        author : "Harper Lee",
-       authorId : "harper-lee",
+       authorId : "5a2ff6e4f514972010a26207",
        category : "Drama",
        votes : 2,
        date : 1960,
@@ -163,7 +231,7 @@ var mongoose = require('mongoose');
       _id: "5a2fc6806528c71be815f931",
        title : "The Book Thief",
        author : "Markus Zusak ",
-       authorId :  "markus-zusak ",
+       authorId :  "5a2ff6e4f514972010a2620a",
        category : "Drama",
        votes : 5,
        images : [
@@ -178,7 +246,7 @@ var mongoose = require('mongoose');
     {
       _id: "5a2fc6806528c71be815f936",
        votes : 0,
-       authorId : "new-author",
+       authorId : "5a2ff6e4f514972010a2620d",
        title : "New Book",
        author : "New Author",
        images : [
