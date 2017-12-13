@@ -61,3 +61,21 @@ function handleError(res, err) {
             });
       });
   };
+
+
+exports.del_authorReview = function(req,res){
+  console.log(req.params.id)
+  author.findById(req.params.id, function (err,author){
+    console.log(author.name)
+    author.reviews.id(req.params.authorReviewId).remove()
+    author.save(function(err){
+      if(err){
+        console.log(a)
+      }
+      else{
+        console.log('author review removed')
+         return res.status(200).json(author);
+      }
+    })
+  })
+}

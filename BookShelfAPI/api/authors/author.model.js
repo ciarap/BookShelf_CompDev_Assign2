@@ -1,5 +1,6 @@
 var mongoose = require('mongoose')
  var Schema = mongoose.Schema;
+  var validate = require('mongoose-validator');
 
 
 var AuthorReviewSchema= new Schema({
@@ -7,12 +8,37 @@ var AuthorReviewSchema= new Schema({
 	user: {type: String, required: true}
 });
 
+
+var nameValidator = [
+  validate({
+    validator: 'isLength',
+    arguments: [2, 20],
+    message: 'Author Name should be between {ARGS[0]} and {ARGS[1]} characters'
+  }),
+  validate({
+    validator: 'isAlphanumeric',
+    passIfEmpty: true,
+    message: 'Name should contain alpha-numeric characters only'
+  })
+];
+
+var infoValidator = [
+  validate({
+    validator: 'isLength',
+    arguments: [2, 1000],
+    message: 'Info should be between {ARGS[0]} and {ARGS[1]} characters'
+  })
+];
+
+
   var AuthorSchema = new Schema({
-           name :{type: String, required: true},  
+           name :{type: String, required: true, validate: nameValidator},  
            url :{type: String, required: true}, 
            imageUrl :{type: String, required: true}, 
-           info :{type: String, required: true},
+           info :{type: String, required: true,validate:infoValidator},
            reviews: [AuthorReviewSchema]
   });
+
+
 
   module.exports = mongoose.model('authors', AuthorSchema);

@@ -7,6 +7,7 @@
     router.post('/', controller.create);
     router.get('/', controller.index);
     router.post('/:id/authorReviews', controller.add_authorReview);
+    router.delete('/:id/authorReviews/:authorReviewId', controller.del_authorReview);
    router.get('/name/:authorName', controller.getAuthorByName);
 
     module.exports = router; 

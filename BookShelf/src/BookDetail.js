@@ -117,16 +117,28 @@ class Form extends React.Component {
 
 
 class AuthorReview extends React.Component {
+
+  handleDelete = () => {   // delete author review
+            this.props.deleteHandler(this.props.review._id);
+        };
+
+
     render() {
         let lineStyle = {
-            fontSize: '20px', marginLeft: '10px'  };
+            fontSize: '20px', marginLeft: '10px' };
         return (
             <div>
                 <span style={lineStyle} >
                     {this.props.review.body}
                 </span>
                  - by {this.props.review.user}
-            </div>                
+                 <div className="col-md-1" style={{float:'right',textAlign:'right'}} onClick={this.handleDelete}>  {/* delete review button */}
+                    <button type="delete" className="btn btn-danger btn-s"
+                        >Delete</button>
+                        </div>
+                        <hr/>
+            </div> 
+
         );
     }
 }
@@ -135,7 +147,7 @@ class AuthorReviewList extends React.Component {
     render() {
         let items = this.props.reviews.map((review,index) => {
             return (
-                <AuthorReview key={index} review={review}  />
+                <AuthorReview key={index} deleteHandler={this.props.deleteHandler} review={review}   />
             );
         } );
         return (
@@ -147,6 +159,21 @@ class AuthorReviewList extends React.Component {
 };
 
     class AuthorSection extends React.Component {   //Author info section of page
+
+       deleteAuthorReview = (reviewId) => {  // to delete an authors review
+             request.delete('http://localhost:3000/api/authors/'+this.props.author._id+'/authorReviews/'+reviewId)  // deletes review from server (DELETE)
+            .end(function(error, res){
+                if (res) {
+                  console.log(res);
+                  var author = JSON.parse(res.text);
+                  api.setOrUpdateAuthor(author); 
+                 this.setState({});            
+                } else {
+                    console.log(error );
+                }
+            }.bind(this)); 
+          };
+
 
 componentDidMount(){
   request.get('http://localhost:3000/api/authors/'+this.props.author._id) //gets author relevant to book from server (READ)
@@ -236,7 +263,7 @@ componentWillUpdate() {   // before update
                     <div className="row">
                     <div className= "col-md-12">
                         <h2 >Author Reviews</h2>
-                         <AuthorReviewList reviews={author.reviews}  />
+                         <AuthorReviewList reviews={author.reviews} deleteHandler={this.deleteAuthorReview}  />
                     <Form author={author}  authorReviewHandler={this.addAuthorReview} /> 
                     </div>
                     </div>

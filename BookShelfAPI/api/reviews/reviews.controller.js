@@ -1,9 +1,11 @@
 var _ = require('lodash')
     //var datastore = require('../datastore');
        var review = require('./review.model');
+ var errorHelper = require('mongoose-error-helper').errorHelper;
 
 
 function handleError(res, err) {
+  console.log(err) ;
     return res.status(500).json(err);
 }
 
@@ -33,15 +35,19 @@ function handleError(res, err) {
  // Creates a new review.
     exports.create = function(req, res) {
          
-        review.create(req.body, function(err, review) {
-        if(err) { return handleError(res, err); }
+        review.create(req.body, function(err, review, next) {
+        if(err) { 
+          //return errorHelper(err, next);
+          handleError(res,err)}
         return res.status(201).json(review);
       });
     };
 
  exports.show = function(req, res) {
       review.findById(req.params._id, function (err, review) {
-          if(err) { return handleError(res, err); }
+          if(err) { 
+            return handleError(res, err); 
+          }
           return res.status(200).json(review);
       });
   } ;
