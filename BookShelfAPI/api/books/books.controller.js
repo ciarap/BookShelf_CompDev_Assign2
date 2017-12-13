@@ -17,6 +17,14 @@ function handleError(res, err) {
     } ;
 
 
+    exports.showTop = function(req, res) {
+      var query = book.find({}).sort({votes: 'desc'}).limit(5).where('votes').gt(0)
+      query.exec(function (err, books) {
+        if(err) { return handleError(res, err); }
+        console.log('index ok' + books[0]);
+        return res.status(200).json(books);
+      });
+    } ;
 
     exports.show = function(req, res) {
       book.findById(req.params._id, function (err, book) {

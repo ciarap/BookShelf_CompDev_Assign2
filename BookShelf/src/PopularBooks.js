@@ -84,7 +84,7 @@ class FilteredPopularBooksList extends React.Component {   // list of popular bo
 
 class PopularBooks extends React.Component{
 componentDidMount() {
-        request.get('http://localhost:3000/api/books')  // get all books (READ)
+        request.get('http://localhost:3000/api/books/top5')  // get all books (READ)
             .end(function(error, res){
                 if (res) {
                     var books = JSON.parse(res.text);
@@ -96,10 +96,7 @@ componentDidMount() {
             }.bind(this)); 
     }
           render(){
-                let list = api.getAllBooks();
-                let filteredPopularBooksList = _.sortBy(list, 'votes') ;  {/* sort the list by votes */}
-                filteredPopularBooksList=filteredPopularBooksList.reverse(); {/* reverse to get highest votes at top */}
-                filteredPopularBooksList=filteredPopularBooksList.slice(0,5);  {/* only want top 5 */}
+                let filteredPopularBooksList= api.getAllBooks();
            return (
            <div className="popularBooksBlock">
                 <h1 className="BlackPageTitle">Top 5 Popular Books</h1>

@@ -4,6 +4,7 @@
     var router = express.Router();
 
     router.get('/', controller.index);
+    router.get('/top5', controller.showTop);
     router.get('/:_id', controller.show);
     router.post('/', controller.create);
     router.delete('/:_id', controller.destroy);
