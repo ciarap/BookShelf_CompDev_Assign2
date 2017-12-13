@@ -1,4 +1,4 @@
-# Assignment 1 - ReactJS app.
+# Assignment 2 - Persistent ReactJS app.
 
 Name: Ciara Power
 
@@ -6,11 +6,9 @@ Name: Ciara Power
 
 ![][image21]
 
-This is an app created with the use of React Framework and Node.js (npm). Javascript, HTML and CSS languages are used throughout.
+This is an app created with the use of React Framework and Node.js (npm). Javascript, HTML and CSS languages are used throughout. Mongo DB and Mongoose are used for data persistence.
 
-The app itself forms a Book Review application, with the concept of having different data objects (books, authors, reviews) served on a JSON server, and for the user to be able to add reviews and books, and even read about books on the app. 
-
-The JSON server hosts a json file, which contains three json arrays, books/authors/reviews. The web app gets all data from the localhost server running on the local machine. HTTP requests are, as a result, used throughout the project to perform CRUD actions.
+The app itself forms a Book Review application, with the concept of having different data objects (books, authors, reviews) served on a mongo database, and for the user to be able to add reviews and books, and even read about books on the app. 
 
 The structure of the data in this app is quite simple, a Book object will have an Author ID attribute within, which corresponds to an Author object in the authors data array. Review objects all contain a Book ID - indicating which book the review is for. 
 
@@ -30,6 +28,8 @@ The structure of the data in this app is quite simple, a Book object will have a
  + Upvote reviews
  + Delete book
  + Delete review
+ + Add review for author
+ + Delete review for author 
  
 
 ## Installation requirements.
@@ -48,13 +48,14 @@ The following list of software was used to develop the app:
 + JSON server
 + Lodash
 + Superagent
++ Mongoose Validator
  
 
 ### Cloning and Running Project : Steps
 
 Clone the project and direct cmd into the base folder. 
 
-Install npm, json server, create react app, bootstrap, lodash, react router, superagent  :
+Install npm, create react app, bootstrap, lodash, react router, superagent , mongoose validator  :
 
 ```
 
@@ -62,24 +63,34 @@ $ npm install
 $ npm install -g create-react-app
 $ npm install  bootstrap@3.3.6  --save
 $ npm install --save react-bootstrap
-$ npm install -g json-server
+$ npm i mongoose-validator -s
 $ npm install  lodash@2.4.2 --save
 $ npm install react-router@2.6.1  --save
 $ npm install  superagent@1.6.1 --save
 
 ```
 
-Run the server from the project base folder in a cmd window :
+Run the database from the project base folder in a cmd window :
 ```
-$ json-server ./data.json
+$ mongod --port 27017 --dbpath ./assignment2_DB/
 ```
 
-In another cmd window, run the app:
+If database is empty - from the folder BookShelfAPI, run the seed script:
+```
+$ node ./config/seed.js
+```
+
+In another cmd window, from the folder BookShelfAPI, run the api:
+```
+$ node bin/www
+```
+
+In another cmd window (3) , run the app:
 ```
 $ npm start
 ```
 
-The server should be running on localhost 3000, and the SPA on localhost 3001. 
+The api database should be running on localhost 3000, and the SPA on localhost 3001. 
 Both can be accessed through an internet browser , e.g Google Chrome.
 
 
