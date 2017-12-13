@@ -86,7 +86,7 @@ Author.find({}).remove(function() {
       author: "J.K Rowling",
       authorId: "5a2ff6e4f514972010a26208",
       category: "Fantasy",
-      date: 1998,
+      date: "1998",
       votes: 28,
       images: [
         "./img/harrypotter_ChamberOfSecrets.jpg",
@@ -102,7 +102,7 @@ Author.find({}).remove(function() {
       author: "George Orwell",
       authorId: "5a2ff6e4f514972010a26206",
       category: "Allegorical",
-      date: 1945,
+      date: "1945",
       images: [
         "./img/AnimalFarm.jpg",
         "./img/AnimalFarm2.jpg",
@@ -126,7 +126,7 @@ Author.find({}).remove(function() {
         "./img/notebook4.jpg"
       ],
       blurb: "Every so often a love story so captures our hearts that it becomes more than a story-it becomes an experience to remember forever. The Notebook is such a book. It is a celebration of how passion can be ageless and timeless, a tale that moves us to laughter and tears and makes us believe in true love all over again... ...At thirty-one, Noah Calhoun, back in coastal North Carolina after World War II, is haunted by images of the girl he lost more than a decade earlier. At twenty-nine, socialite Allie Nelson is about to marry a wealthy lawyer, but she cannot stop thinking about the boy who long ago stole her heart. Thus begins the story of a love so enduring and deep it can turn tragedy into triumph, and may even have the power to create a miracle...",
-      date: 1996
+      date: "1996"
     },
     {
       _id:"5a2fc6806528c71be815f928",
@@ -140,7 +140,7 @@ Author.find({}).remove(function() {
         "./img/passenger2.jpg",
       "./img/passenger3.jpg"
       ],
-       date : 2016,
+       date : "2016",
        blurb : "“A dead-serious thriller (with a funny bone)” (The New York Times Book Review), from the author of the New York Times bestselling Spellman Files series, comes the story of a woman who creates and sheds new identities as she crisscrosses the country to escape her past. Forty-eight hours after leaving her husband’s body at the base of the stairs, Tanya Dubois cashes in her credit cards, dyes her hair brown, demands a new name from a shadowy voice over the phone, and flees town. It’s not the first time. She meets Blue, a female bartender who recognizes the hunted look in a fugitive’s eyes and offers her a place to stay. With dwindling choices, Tanya-now-Amelia accepts. An uneasy―and dangerous―alliance is born. It’s almost impossible to live off the grid in the twenty-first century, but Amelia-now-Debra and Blue have the courage, the ingenuity, and the desperation, to try. Hopscotching from city to city, Debra especially is chased by a very dark secret. From heart-stopping escapes and devious deceptions, we are left to wonder…can she possibly outrun her past? The Passenger’s white-knuckled plot and unforeseeable twists make one thing for certain: the ride will leave you breathless. “When the answers finally come, they are juicy, complex, and unexpected. The satisfying conclusion will leave readers rethinking everything and immediately turning back to the first page to start again. Psychological suspense lovers will tear through this thriller” (Library Journal, starred review)."
     },
     {
@@ -150,7 +150,7 @@ Author.find({}).remove(function() {
        authorId : "5a2ff6e4f514972010a26207",
        category : "Drama",
        votes : 2,
-       date : 1960,
+       date : "1960",
        images : [
         "./img/ToKillAMockingbird.gif",
         "./img/ToKillAMockingbird2.jpg",
@@ -173,7 +173,7 @@ Author.find({}).remove(function() {
         "./img/BookThief4.jpg"
       ],
        blurb : "The extraordinary #1 New York Times bestseller that is now a major motion picture, Markus Zusak's unforgettable story is about the ability of books to feed the soul.It is 1939. Nazi Germany. The country is holding its breath. Death has never been busier, and will become busier still. Liesel Meminger is a foster girl living outside of Munich, who scratches out a meager existence for herself by stealing when she encounters something she can’t resist–books. With the help of her accordion-playing foster father, she learns to read and shares her stolen books with her neighbors during bombing raids as well as with the Jewish man hidden in her basement. In superbly crafted writing that burns with intensity, award-winning author Markus Zusak, author of I Am the Messenger, has given us one of the most enduring stories of our time.",
-       date : 2005
+       date : "2005"
     },
     {
       _id: "5a2fc6806528c71be815f936",
@@ -185,7 +185,7 @@ Author.find({}).remove(function() {
         "./img/BookThief4.jpg"
       ],
        category : "Allegorical",
-       date : 1999,
+       date : "1999",
        blurb : "jhgfdcvbhjuytgv"
     }, function () {
         process.exit()
@@ -227,7 +227,7 @@ Author.find({}).remove(function() {
        opinion : "Great",
        bookId : "5a2fc6806528c71be815f92c",
        bookTitle:"To Kill A Mockingbird",
-       username : "Jo",
+       username : "Joseph",
        upvote : 50
     },
     {
@@ -248,7 +248,7 @@ Author.find({}).remove(function() {
        opinion :  "good book" ,
        bookId : "5a2fc6806528c71be815f931",
        bookTitle: "The Book Thief",
-       username : "CP",
+       username : "CPower",
        upvote : 2
     },
     {
