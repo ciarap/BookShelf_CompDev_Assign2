@@ -5,6 +5,8 @@
     import AuthorCache from './AuthorCache';
     import request from 'superagent' ; 
      import { Link } from 'react-router'; 
+     import api from './LocalCache';
+
    
 
    class BookSection extends React.Component {  // section of page containing book details
@@ -68,12 +70,153 @@ class ImagesSection extends React.Component{   // images section of page
 }
 };
 
+
+class Form extends React.Component {
+    state = { body: '', user: ''};
+
+    handleBodyChange = (e) => {
+        this.setState({body : e.target.value});
+    };
+
+    handleUserChange = (e) => {
+        this.setState({user: e.target.value});
+    };
+
+    onSubmit = (e) => {
+        e.preventDefault();
+        let body = this.state.body.trim();
+        let user = this.state.user.trim();
+        if (!body ) {
+            return;
+        }
+        this.props.authorReviewHandler(body,user );
+        this.setState({body: '', user: ''});
+    };
+
+    render() {
+        return (
+            <form  style={{marginTop: '30px'}}>
+                <h4>Add a new comment</h4>
+
+                <div className="form-group">
+                    <input type="text"  className="form-control"
+                        placeholder="Body" value={this.state.body}
+                        onChange={this.handleBodyChange} ></input>
+                </div>     
+                <div className="form-group">
+                    <input type="text"  className="form-control"
+                        placeholder="Your username" value={this.state.user}
+                        onChange={this.handleUserChange} ></input>
+                </div>
+                <button type="submit" className="btn btn-primary"
+                    onClick={this.onSubmit}>Submit</button>
+            </form>
+        );
+    }
+}
+
+
+class AuthorReview extends React.Component {
+    render() {
+        let lineStyle = {
+            fontSize: '20px', marginLeft: '10px'  };
+        return (
+            <div>
+                <span style={lineStyle} >
+                    {this.props.review.body}
+                </span>
+                 - by {this.props.review.user}
+            </div>                
+        );
+    }
+}
+
+class AuthorReviewList extends React.Component {
+    render() {
+        let items = this.props.reviews.map((review,index) => {
+            return (
+                <AuthorReview key={index} review={review}  />
+            );
+        } );
+        return (
+            <div>
+                {items}
+            </div>
+        );
+    }
+};
+
     class AuthorSection extends React.Component {   //Author info section of page
+
+componentDidMount(){
+  request.get('http://localhost:3000/api/authors/'+this.props.author._id) //gets author relevant to book from server (READ)
+            .end(function(error, res){
+                if (res) {
+                  if(error){
+                    if (error.status === 404){   // if author doesnt exist
+                    AuthorCache.setAuthor(null);
+                  }
+                }
+                  else{
+                    var author = JSON.parse(res.text);   // author found
+                    AuthorCache.setAuthor(author);
+                  }
+                    this.setState({}) ; 
+                } else {
+                   
+                    console.log(error );
+                 
+                }
+            }.bind(this)); 
+}
+
+componentWillUpdate() {   // before update
+        request.get('http://localhost:3000/api/authors/'+this.props.author._id)    // (READ) gets book from server and gets reviews from server that have the relevant bookId attribute value to the book in question
+                                                                                                     // this for all purposes returns the book object with a nested collection within of the reviews matching the book
+            .end(function(error, res){
+                if (res) {
+                    var newAuthor = JSON.parse(res.text);   {/* the updated json file from server*/}
+                    var oldAuthor=AuthorCache.getAuthor();   {/* the previous list of Reviews that was stored in cache */}
+                    AuthorCache.setAuthor(newAuthor)
+                    newAuthor=AuthorCache.getAuthor();    {/* updated list*/}
+
+               console.log("Test Authors");
+               if(newAuthor.reviews.length!== oldAuthor.reviews.length){    {/* if list length was changed */}
+                console.log("Length change");
+                      this.setState({});
+                }
+                } else {
+                    console.log(error );
+                }
+            }.bind(this)); 
+
+           
+      };
+          addAuthorReview = (body, user) => {
+          var author=AuthorCache.getAuthor();
+        request
+           .post('http://localhost:3000/api/authors/' + 
+                      author._id + '/authorReviews' )
+           .send({ body: body,user: user})
+           .set('Content-Type', 'application/json')
+           .end( (err, res) => {
+             if (err || !res.ok) {
+                 alert('Error adding  author review');
+             } else {
+                 let author = JSON.parse(res.text);
+                 api.setOrUpdateAuthor(author); 
+                 this.setState({});               
+             }
+           } ); 
+    };
+
+
       render(){
+        var author= AuthorCache.getAuthor();
           var mainImage = (
             <div className="author-images">
-              <img src={"/"+this.props.author.imageUrl}     // get the image to be shown 
-                    alt={this.props.author.name}  className="author"/>
+              <img src={"/"+author.imageUrl}     // get the image to be shown 
+                    alt={author.name}  className="author"/>
             </div>
             ) ;
             return (
@@ -84,10 +227,17 @@ class ImagesSection extends React.Component{   // images section of page
                    </div>
                    <div className="col-md-9 ">
                    <h1 >Author</h1>
-                   <a className="link" href={this.props.author.url}>
-                   <h3 style={{borderBottom:'none'}}>{this.props.author.name}</h3>
+                   <a className="link" href={author.url}>
+                   <h3 style={{borderBottom:'none'}}>{author.name}</h3>
                    </a>
-                    <p> {this.props.author.info}</p>
+                    <p> {author.info}</p>
+                    </div>
+                    </div>
+                    <div className="row">
+                    <div className= "col-md-12">
+                        <h2 >Author Reviews</h2>
+                         <AuthorReviewList reviews={author.reviews}  />
+                    <Form author={author}  authorReviewHandler={this.addAuthorReview} /> 
                     </div>
                     </div>
                   </div>
@@ -99,6 +249,7 @@ class ImagesSection extends React.Component{   // images section of page
     class BookDetail extends React.Component {  // total book detail page component
 
       state = { };
+
 
        componentDidMount() {   // when component mounts
 

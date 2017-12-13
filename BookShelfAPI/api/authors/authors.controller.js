@@ -44,3 +44,20 @@ function handleError(res, err) {
         return res.status(201).json(authors);
       });
     };
+
+     // Add a  review to an author
+  exports.add_authorReview = function(req, res) {
+     author.findById(req.params.id, function (err, author) {
+         if(err) { res.sendStatus(404); }
+         var review = {
+             body: req.body.body,
+             user: req.body.user 
+          };
+          author.reviews.push(review);
+          console.log("Author Name"+author.name);
+          author.save(function (err, author) {
+              if(err) { return handleError(res, err); }
+                 return res.status(200).json(author);
+            });
+      });
+  };
