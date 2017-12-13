@@ -186,14 +186,14 @@ componentDidMount() {      // when component is mounted at first
            };
 
 
-        deleteBook = (k) => {
+        deleteBook = (k) => {    // delete book
         request
           .del('http://localhost:3000/api/books/' + k)
           .end( (err, res) => {
               if (err || !res.ok) {
                  alert('Error deleting book');
                } else {
-                  api.deleteBook(k);
+                  api.deleteBook(k);      
                   this.setState( {} ) ;
                } 
           });

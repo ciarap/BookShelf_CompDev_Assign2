@@ -12,7 +12,7 @@ var AuthorReviewSchema= new Schema({
 var nameValidator = [
   validate({
     validator: 'isLength',
-    arguments: [2, 20],
+    arguments: [2, 50],
     message: 'Author Name should be between {ARGS[0]} and {ARGS[1]} characters'
   })
 ];

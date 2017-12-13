@@ -1,5 +1,4 @@
 var _ = require('lodash')
-//var datastore = require('../datastore');
     var author = require('./author.model');
 
 
@@ -62,7 +61,7 @@ function handleError(res, err) {
       });
   };
 
-
+// deletes a review from author 
 exports.del_authorReview = function(req,res){
   console.log(req.params.id)
   author.findById(req.params.id, function (err,author){

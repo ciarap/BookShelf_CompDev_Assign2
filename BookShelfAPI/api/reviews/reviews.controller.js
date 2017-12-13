@@ -1,5 +1,4 @@
 var _ = require('lodash')
-    //var datastore = require('../datastore');
        var review = require('./review.model');
  var errorHelper = require('mongoose-error-helper').errorHelper;
 
@@ -43,6 +42,8 @@ function handleError(res, err) {
       });
     };
 
+
+//get one review
  exports.show = function(req, res) {
       review.findById(req.params._id, function (err, review) {
           if(err) { 
@@ -52,7 +53,7 @@ function handleError(res, err) {
       });
   } ;
 
-
+// delete review
 exports.destroy = function(req, res) {
     review.findById(req.params._id, function (err, review) {
         if(err) { return handleError(res, err); }        

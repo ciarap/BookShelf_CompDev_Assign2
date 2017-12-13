@@ -1,5 +1,4 @@
 var _ = require('lodash')
-    //var datastore = require('../datastore');
     var book = require('./book.model');
 
 
@@ -17,7 +16,7 @@ function handleError(res, err) {
       });
     } ;
 
-
+  // get top 5 books in order of votes using query 
     exports.showTop = function(req, res) {
       var query = book.find({}).sort({votes: 'desc'}).limit(5).where('votes').gt(0)
       query.exec(function (err, books) {
@@ -26,6 +25,8 @@ function handleError(res, err) {
         return res.status(200).json(books);
       });
     } ;
+
+    // show one book
 
     exports.show = function(req, res) {
       book.findById(req.params._id, function (err, book) {
@@ -44,6 +45,7 @@ function handleError(res, err) {
       });
     };
 
+// delete book
  exports.destroy = function(req, res) {
     book.findById(req.params._id, function (err, book) {
         if(err) { return handleError(res, err); }        
@@ -55,7 +57,7 @@ function handleError(res, err) {
 };
 
 
-    // Update the votes for a posts.
+    // Update the votes for a book.
   exports.update_votes = function(req, res) {
      book.findById(req.params._id, function (err, book) {
           if(err) { res.sendStatus(404); }

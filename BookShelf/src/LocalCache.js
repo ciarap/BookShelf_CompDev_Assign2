@@ -37,6 +37,7 @@ class LocalCache {    // local cache for books and reviews lists
         return null;
     }
 
+
      deleteBook(k) {
           let elements = _.remove(this.books, 
               (book) => book._id === k
@@ -50,6 +51,7 @@ class LocalCache {    // local cache for books and reviews lists
           );
           return elements; 
       }
+
 
  setOrUpdateBook(book) {
       var index = _.findIndex(this.books, { _id: book._id} );   
@@ -80,34 +82,8 @@ setOrUpdateReview(review) {
       }
       return true ;
   }
-add(id,t,aid,a,d,b,i,c) {
-          let len = this.books.length ;
-          let newLen = this.books.push({
-              _id: id, title: t, authorId : aid, author: a, date: d, blurb:b, images: i, category:c }) ;
-          return newLen > len ;
-      }
-
-       update(id,t,aid,a,d,b,i,c) {
-          var index = _.findIndex(this.books, 
-              (book) => book._id === id
-          );      
-          if (index !== -1) {
-              this.books.splice(index, 1, 
-                  {     _id: id, title: t, authorId : aid, author: a, date: d, blurb:b, images: i, category:c });
-              return true ;
-          }
-          return false ;
-      }
 
 
-  getBook(id) {
-      var result = null ;
-      var index = _.findIndex(this.books, { '_id': id} );     
-      if (index !== -1) {                 
-          result = this.books[index];
-      }
-      return result ;
-  }
 }
 
 
