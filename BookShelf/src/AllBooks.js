@@ -63,7 +63,7 @@ class BookListItem extends React.Component {   //each individual book item detai
             <div className="row">
             <div className="col-md-2">
              <Link className="link" to={'/AllBooks/' + this.props.book._id +'/'+this.props.book.authorId}>  {/* Image is link to book details page*/}
-            <img src={"../"+this.props.book.images[0].url} alt= {this.props.book.title} className="thumb"/>
+            <img src={"../"+this.props.book.images[0]} alt= {this.props.book.title} className="thumb"/>
                  </Link>
                  </div>
                   <div className="col-md-7">
@@ -197,7 +197,34 @@ componentDidMount() {      // when component is mounted at first
                   this.setState( {} ) ;
                } 
           });
-    };
+
+
+           request.get('http://localhost:3000/api/reviews/book/'+k)    // (READ) gets book from server and gets reviews from server that have the relevant bookId attribute value to the book in question
+                                                                                                     // this for all purposes returns the book object with a nested collection within of the reviews matching the book
+            .end(function(error, res){
+                if (res) {
+                    var newReviews = JSON.parse(res.text);   {/* the updated json file from server*/}
+                    var oldReviews=api.getAllReviews();   {/* the previous list of Reviews that was stored in cache */}
+                    api.initializeReviews(newReviews);
+                    newReviews=api.getAllReviews();    {/* updated list*/}
+
+                     for(var i=0;i<newReviews.length;i++){   // if the upvotes of review in one book doesnt match the corresponding review upvotes in other book, update needed
+                    request
+                        .del('http://localhost:3000/api/reviews/' + newReviews[i]._id)
+                      .end( (err, res) => {
+                         if (err || !res.ok) {
+                             alert('Error deleting review');
+                          } else {
+                             api.deleteReview(k);
+                            this.setState( {} ) ;
+                          } 
+                        });
+                    }
+                } else {
+                    console.log(error );
+                }
+            }.bind(this)); 
+}
           render(){
                 let list = api.getAllBooks().filter( (p) => {      {/* searches through list in accordance with search state value*/}
                     return p.title.toLowerCase().search(

@@ -2,8 +2,8 @@
 
 import React from 'react';
 import request from 'superagent' ;
- 
-
+ import AuthorCache from './AuthorCache';
+import api from './LocalCache';
 
 class Form extends React.Component {
         state = { title: '', author: '',authorImageUrl:'',authorInfo:'',authorWikiUrl:'',imageUrl1:'',imageUrl2:'',imageUrl3:'',imageUrl4:'',category:'General',date:'',blurb:''};
@@ -68,8 +68,9 @@ class Form extends React.Component {
             if (!title || !author || !authorImageUrl || !authorWikiUrl || !authorInfo || !imageUrl1 || !date || !blurb) {  // required inputs before submission occurs
                 return;
             }
-            this.props.addBookHandler(title,author,imageUrl1,imageUrl2,imageUrl3,imageUrl4,category,date,blurb );  // send book values to add book
-            this.props.addAuthorHandler(author,authorImageUrl,authorInfo,authorWikiUrl);  // send author values to add author 
+           
+            
+             this.props.addBookHandler(title,author,imageUrl1,imageUrl2,imageUrl3,imageUrl4,category,date,blurb,authorImageUrl,authorInfo,authorWikiUrl );  // send book values to add book
             this.setState({ title: '', author: '',authorImageUrl:'',authorInfo:'',authorWikiUrl:'',imageUrl1:'',imageUrl2:'',imageUrl3:'',imageUrl4:'',category:'General',date:'',blurb:''});
         };
 
@@ -169,13 +170,44 @@ class Form extends React.Component {
 
   class NewBookView extends React.Component {
 
-          addBook = (title,author,imageUrl1,imageUrl2,imageUrl3,imageUrl4,category,date,blurb) => {   // add new book
-            let id=  title.replace(/\s+/g, '-');   // replace spaces in title name with - for id value
-            id=id.toLowerCase();  // set to lower case id
-            let authorId= author.replace(/\s+/g, '-');   // similar to title/id above
-            authorId=authorId.toLowerCase();
 
-            date= parseInt(date,10); // convert date string value to number
+          addBook = (title,author,imageUrl1,imageUrl2,imageUrl3,imageUrl4,category,date,blurb,authorImageUrl,authorInfo,authorWikiUrl) => {   // add new book
+
+        
+
+ request.get('http://localhost:3000/api/authors')   // Get authors list from server  (READ)
+            .end(function(error, res){
+                if (res) {
+                    var authors = JSON.parse(res.text);
+                    api.initializeAuthors(authors);
+                } else {
+                    console.log(error );
+                }
+            }.bind(this)); 
+
+
+    
+             request.get('http://localhost:3000/api/authors/name/'+author) 
+           .end(function(error, resp){
+                if (resp) {
+                    console.log("Get author by name "+ resp.text);
+                     if(error || resp.text==="[]"){  // if author doesnt exist
+                       request.post('http://localhost:3000/api/authors/')
+                     .send({"name":author, "url":authorWikiUrl, "imageUrl":authorImageUrl,"info":authorInfo})  //add author to server (CREATE)
+                      .set('Content-Type', 'application/json')
+                       .end( (err, res) => {
+                          if (err || res.status!==201) {
+                            alert('Error adding author');
+
+                         } 
+                         else if(res.status===201){
+                            console.log("Console"+res.text);
+                        var newAuth = JSON.parse(res.text);
+                        AuthorCache.setAuthor(newAuth);
+                            console.log("New Name"+newAuth.name)
+                          api.setOrUpdateAuthor(newAuth); 
+
+                           date= parseInt(date,10); // convert date string value to number
 
             let images=[];  //empty images array 
             if(imageUrl1){      // test if each url is not empty, then push it into the array
@@ -191,55 +223,93 @@ class Form extends React.Component {
               images.push(imageUrl4);
             }
 
-            request.post('http://localhost:3000/api/books/',{"votes":0,"id":id, "authorId":authorId,"title":title, "author":author,"images":images, "category":category,"date":date,"blurb":blurb})  // add new book to server with all attributes (CREATE)
-            .end(function(error, res){
-                if (res) {
-                  console.log(res);
-                  this.setState({}) ; 
-                } else {
+           var auth=AuthorCache.getAuthor();
+           if(auth){
+            request.post('http://localhost:3000/api/books/')
+            .send({"authorId":auth._id,"title":title, "author":author,"images":images, "category":category,"date":date,"blurb":blurb})  // add new book to server with all attributes (CREATE)
+             .set('Content-Type', 'application/json')
+             .end( (err, res) => {
+             if (err || !res.ok) {
+                 alert('Error adding book');
+             } else {
+                let newBook= JSON.parse(res.text);
+                console.log(newBook.title)
+                   api.setOrUpdateBook(newBook); 
+                   this.setState({});           
+             }
+           });
+         }
+         else{
+            console.log("Auth was null");
+         }
+                  
+                      
+
+                
+                                 
+             }
+           }); 
+                  
+                }
+                  else{
+                    var authors = JSON.parse(resp.text);   // author found
+                    console.log(resp.text);
+                    AuthorCache.setAuthor(authors[0]);
+
+                     date= parseInt(date,10); // convert date string value to number
+
+            let images=[];  //empty images array 
+            if(imageUrl1){      // test if each url is not empty, then push it into the array
+              images.push(imageUrl1);
+            }
+            if(imageUrl2){
+              images.push(imageUrl2);
+            }
+            if(imageUrl3){
+              images.push(imageUrl3);
+            }
+            if(imageUrl4){
+              images.push(imageUrl4);
+            }
+
+           var auth=AuthorCache.getAuthor();
+           if(auth){
+            request.post('http://localhost:3000/api/books/')
+            .send({"authorId":auth._id,"title":title, "author":author,"images":images, "category":category,"date":date,"blurb":blurb})  // add new book to server with all attributes (CREATE)
+             .set('Content-Type', 'application/json')
+             .end( (err, res) => {
+             if (err || !res.ok) {
+                 alert('Error adding book');
+             } else {
+                let newBook= JSON.parse(res.text);
+                console.log(newBook.title)
+                   api.setOrUpdateBook(newBook); 
+                   this.setState({});           
+             }
+           });
+         }
+         else{
+            console.log("Auth was null");
+         }
+                  
+                      
+
+                
+}
+                     } else {
                     console.log(error );
                 }
             }.bind(this)); 
-        };
 
-           addAuthor= (author,authorImageUrl,authorInfo,authorWikiUrl) => {  // add author 
-            let authorId= author.replace(/\s+/g, '-');  //replace author name spaces with -
-            authorId=authorId.toLowerCase();   // author id to lower case
-
-
-        request.get('http://localhost:3000/api/authors/'+authorId)  // get author object from server (READ)
-            .end(function(error, res){
-                if (res) {
-                  if(error){
-                    if (error.status === 404){  // if the author doesnt exist then create the author 
-                     request.post('http://localhost:3000/api/authors/',{"name":author, "id":authorId,"url":authorWikiUrl, "imageUrl":authorImageUrl,"info":authorInfo})  //add author to server (CREATE)
-                      .end(function(error, res){
-                      if (res) {
-                         console.log(res);
-                        this.setState({}) ; 
-                      } else {
-                    console.log(error );
-                      }
-                     }.bind(this)); 
-                  }
-                   }
-                    this.setState({}) ; 
-                } else {
-                   
-                    console.log(error );
-                 
-                }
-            }.bind(this)); 
 
         };
-
 
       render(){
                
            return (
                <div>
                <h1 className="BlackPageTitle">Add Book</h1>
-              <Form addBookHandler={this.addBook} addAuthorHandler={this.addAuthor} /> 
+              <Form addBookHandler={this.addBook}  /> 
               </div>
          );
     }

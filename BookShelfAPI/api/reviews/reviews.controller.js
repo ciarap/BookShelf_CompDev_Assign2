@@ -2,6 +2,11 @@ var _ = require('lodash')
     //var datastore = require('../datastore');
        var review = require('./review.model');
 
+
+function handleError(res, err) {
+    return res.status(500).json(err);
+}
+
  // Get all reviews
     exports.index = function(req, res) {
        review.find(function (err, reviews) {
@@ -51,6 +56,9 @@ exports.destroy = function(req, res) {
         });
     })
 };
+
+
+
 
     // Update the upvote for a reviews
   exports.update_upvote = function(req, res) {

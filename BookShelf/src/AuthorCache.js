@@ -7,6 +7,7 @@
         }
 
         setAuthor(author) {
+          console.log("Setting author"+author.name);
            this.author = author ;
         }
 

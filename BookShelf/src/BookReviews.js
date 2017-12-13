@@ -28,6 +28,7 @@ class Form extends React.Component {   // form component to add a review
             if (!opinion || !username ) {
                 return;
             }
+
             this.props.reviewHandler(opinion,username );
             this.setState({opinion: '', username: ''});
         };
@@ -215,18 +216,22 @@ class ReviewList extends React.Component {
           };
 
 
-          addReview = (opinion,username) => {   // to add a review 
-            request.post('http://localhost:3000/api/reviews/',{"opinion":opinion, "bookId":this.props.params._id,"username":username, "upvote":0})  // adds review to server , passing all atttribute values  (CREATE)
-            .end(function(error, res){
-                if (res) {
-                  console.log(res);
-                  this.setState({}) ; 
-                } else {
-                    console.log(error );
-                }
-            }.bind(this)); 
-};
-
+          addReview = (opinion,username, bookTitle) => {   // to add a review 
+             var book = BookCache.getBook();
+            request.post('http://localhost:3000/api/reviews/')
+            .send({"opinion":opinion, "bookId":this.props.params._id,"bookTitle":book.title, "username":username, "upvote":0})
+           .set('Content-Type', 'application/json')
+           .end( (err, res) => {
+             if (err || !res.ok) {
+                 alert('Error adding review');
+             } else {
+                let newReview = JSON.parse(res.text);
+                console.log(newReview.opinion)
+                   api.setOrUpdateReview(newReview); 
+                   this.setState({});           
+             }
+           } ); 
+    };
       render(){
                
           let formDisplay=<p> No Form</p>;

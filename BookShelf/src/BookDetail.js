@@ -16,7 +16,7 @@
       render(){
           var mainImage = (
             <div className="book-images">
-              <img src={"/"+this.props.book.images[0].url}   // first image in nested images collection is main image 
+              <img src={"/"+this.props.book.images[0]}   // first image in nested images collection is main image 
                     alt={this.props.book.title}  className="book"/>
             </div>
             ) ;
@@ -51,7 +51,7 @@ class ImagesSection extends React.Component{   // images section of page
                console.log(img);
                return (
                 <li key={index}>
-                   <img key={index} src={"/"+img.url}
+                   <img key={index} src={"/"+img}
                        alt="missing" />
 
                 </li>

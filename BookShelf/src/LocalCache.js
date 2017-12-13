@@ -6,6 +6,7 @@ class LocalCache {    // local cache for books and reviews lists
     constructor() {
         this.books = [] ;
         this.reviews = [] ;
+        this.authors=[];
     }
 
    initializeBooks(books) {    // NEW 
@@ -16,6 +17,16 @@ class LocalCache {    // local cache for books and reviews lists
     getAllBooks() {
         return this.books ;
     }
+    
+     initializeAuthors(authors) {    // NEW 
+          this.authors = authors
+          return null; 
+      }
+
+    getAllAuthors() {
+        return this.authors ;
+    }
+
 
     getAllReviews() {
         return this.reviews ;
@@ -46,6 +57,16 @@ class LocalCache {    // local cache for books and reviews lists
           this.books.splice(index,1,book) ;
       } else {
           this.books.push(book) ;
+      }
+      return true ;
+  }
+
+  setOrUpdateAuthor(author) {
+      var index = _.findIndex(this.authors, { _id: author._id} );   
+      if (index !== -1) {                 
+          this.authors.splice(index,1,author) ;
+      } else {
+          this.authors.push(author) ;
       }
       return true ;
   }

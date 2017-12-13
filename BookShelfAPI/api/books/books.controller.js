@@ -27,7 +27,8 @@ function handleError(res, err) {
 
     // Creates a new book.
     exports.create = function(req, res) {
-         
+        req.body.votes = 0 ;
+      console.log("Create");
         book.create(req.body, function(err, book) {
         if(err) { return handleError(res, err); }
         return res.status(201).json(book);

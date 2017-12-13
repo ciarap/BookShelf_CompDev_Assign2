@@ -92,7 +92,7 @@ if(book){    {/* book object found */}
     <div className="row">
    <div className="col-md-2" style={{margin:'auto'}}>
              <Link className="link" to={'/AllBooks/' + book._id +'/'+book.authorId}>   {/*link to book details*/}
-            <img src={"../"+book.images[0].url} alt= {book.title} className="thumb"/>
+            <img src={"../"+book.images[0]} alt= {book.title} className="thumb"/>
                  </Link>
                  </div>
                   <div className="col-md-9" style={{paddingTop:'2em'}}>
