@@ -164,7 +164,9 @@ View 2:
 
 View 3: 
 
-![][image12]
+![][image22]
+
+
 
 ### Book Reviews
 
@@ -215,21 +217,20 @@ View 1:
 + Used NavBar Nav and NavItem from the react-router package to develop a navigation bar.
 + Modified bootstrap style presets by creating a style.css file.
 + Query used in HTTP GET requests which linked up review objects to certain book object.
++ Mongoose validator
 
 ## Independent learning.
 
 In order to create the navigation bar, I had to research using NavBar from react-bootstrap. There are many ways to use this feature, bt I found using the Nav and NavItem elements within it worked best.
 
-As I chose to use a JSON server, and had only used an example of a GET request before, I researched the other types of requests (DELETE, PATCH, POST) and their uses for a json server. 
-
-When creating the json file to act as the database, I was originally planning on having the reviews as a nested collection within the book objects. However, after researching the use of nested collections and modifying data by update, I found that to implement the Upvote feature on a review, which updates an attribute of the review object in question, I had to remove the reviews as nested collections and create them in a array of their own. This is due to the fact that only one level of children elements can be accessed and modified, so modifying a child's child ( review's upvote attribute) was not possible. 
-
-To link up reviews to book objects, I researched querying with HTTP requests. I found that using the embed query worked to link them, as long as i had a bookId attribute in the review object, which corresponds to a book object id. 
+Mongoose validator was used. 
 
 
-[image1]: ./views_screenshots/books.PNG
-[image2]: ./views_screenshots/authors.png
-[image3]: ./views_screenshots/reviews.png
+
+
+[image1]: ./views_screenshots/book2.PNG
+[image2]: ./views_screenshots/author2.png
+[image3]: ./views_screenshots/review2.png
 
 [image4]: ./views_screenshots/HomePage.PNG
 [image5]: ./views_screenshots/AllBooks1.PNG
@@ -249,4 +250,5 @@ To link up reviews to book objects, I researched querying with HTTP requests. I 
 [image19]: ./views_screenshots/NavBar_Hover.PNG
 [image20]: ./views_screenshots/ComponentHierarchy.png
 [image21]: ./views_screenshots/logo.PNG
+[image22]: ./views_screenshots/authorreviews.PNG
 
