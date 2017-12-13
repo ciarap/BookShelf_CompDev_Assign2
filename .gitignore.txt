@@ -1,6 +1,0 @@
-  /node_modules
-  *.lock
-  # misc
-  .DS_Sto*
-  /**/.DS_Store
-  *.log
