@@ -229,8 +229,8 @@ Mongoose validator was used.
 
 
 [image1]: ./views_screenshots/book2.PNG
-[image2]: ./views_screenshots/author2.png
-[image3]: ./views_screenshots/review2.png
+[image2]: ./views_screenshots/author2.PNG
+[image3]: ./views_screenshots/review2.PNG
 
 [image4]: ./views_screenshots/HomePage.PNG
 [image5]: ./views_screenshots/AllBooks1.PNG
@@ -250,5 +250,5 @@ Mongoose validator was used.
 [image19]: ./views_screenshots/NavBar_Hover.PNG
 [image20]: ./views_screenshots/ComponentHierarchy.png
 [image21]: ./views_screenshots/logo.PNG
-[image22]: ./views_screenshots/authorreviews.PNG
+[image22]: ./views_screenshots/authorReviews.PNG
 
